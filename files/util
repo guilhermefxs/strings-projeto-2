@@ -1,0 +1,1 @@
+(time ../bin/pmt -a ${alg} -e 7 -c ${PATTERN} new_english) 2>&1 | tee -a results/${alg}_english_e.txt
