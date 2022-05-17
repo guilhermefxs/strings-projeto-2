@@ -21,10 +21,10 @@ Sinopse
     Para indexação e busca foi usado o algoritmo sufix array
     Para compressão e descompressão foi usado o algoritmo LZ78
 
-    --help      Exibe as opções da CLI
-    Opções abaixo são permitidas apenas para o modo busca
-	 --pattern -p ARQUIVO      faz a busca com os padrões em ARQUIVO, um por linha
-    --count -c      exibe somente a quantidade de padrões encontrados
+	    --help      Exibe as opções da CLI
+	    Opções abaixo são permitidas apenas para o modo busca
+	    --pattern -p ARQUIVO      faz a busca com os padrões em ARQUIVO, um por linha
+	    --count -c      exibe somente a quantidade de padrões encontrados
 
 Compilação
 ----------
