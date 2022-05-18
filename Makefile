@@ -1,18 +1,21 @@
 CC=g++
-CFLAGS=-O3 -std=c++11 -Wall -Iinclude -c -g
+CFLAGS=-O3 -std=c++14 -Wall -Iinclude -c -g
 LDFLAGS=
 EXECUTABLE=ipmt
 
 
-pmt: main.o util.o lz78.o
+ipmt: main.o util.o lz78.o sufixArray.o
 	mkdir -p bin
-	$(CC) main.o util.o lz78.o -o bin/ipmt
+	$(CC) main.o util.o lz78.o sufixArray.o -o bin/ipmt
 	rm *.o
 
 #objetos dos algoritmos
 
 lz78.o:
 	$(CC) $(CFLAGS) src/lz78.cpp
+
+sufixArray.o:
+	$(CC) $(CFLAGS) src/sufixArray.cpp
 
 #objetos padrao
 main.o: util.o

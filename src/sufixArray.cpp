@@ -24,18 +24,16 @@ bool startsWith(string a, string b){
     else
         return false;
 }
- 
-ofstream out("output.idx");
 
-void getSuffix(string s){
+void getSuffix(string s, ofstream &out){
     vector< pair<int,string> > answer;
     int countLetter[256] = {0}; 
     pair<int, string> send;
     int count=0; 
-    for(int i=0; i<s.length(); i++){
+    for(long unsigned int i=0; i<s.length(); i++){
         string concat="";
         countLetter[s[i]]++;
-        for(int k = i; k<s.length(); k++){
+        for(long unsigned int k = i; k<s.length(); k++){
             concat+=s[k];
         }
         send.first=count;
@@ -44,7 +42,7 @@ void getSuffix(string s){
         count++;
     }
     sort(answer.begin(), answer.end(), sortSec);
-    for(int i=0; i<answer.size(); i++){
+    for(long unsigned int i=0; i<answer.size(); i++){
         out<< answer[i].first;
         if(i!=answer.size()-1) out<<" ";   
     }
@@ -63,13 +61,13 @@ vector<pair <int, string> > fix(vector<int> &first, vector<int> &countLetter){
     int currentPos =0;
     vector<pair < int, string> > answer(first.size());
     string concat(first.size(), 'a');
-    for(int i=0; i<countLetter.size(); i++){
+    for(long unsigned int i=0; i<countLetter.size(); i++){
         for(int j=0; j<countLetter[i]; j++){
             concat[first[currentPos]]=(char) i;
             currentPos++;
         }
     }
-    for(int i=0; i<first.size(); i++){
+    for(long unsigned int i=0; i<first.size(); i++){
         answer[i].first = first[i];
         answer[i].second = concat.substr(i);
     }
@@ -83,7 +81,6 @@ vector<int> searchPattern(string pattern, vector< pair< int, string > > &suffixA
     int lo = 0;
     int hi = suffixArray.size()-1;
     int saveMin=-1;
-    int countAnswer =0;
     while(lo<=hi){
         int mid = (lo+hi)/2;
         if(startsWith(suffixArray[mid].second, pattern)){
@@ -135,33 +132,26 @@ vector<int> searchPattern(string pattern, vector< pair< int, string > > &suffixA
     }
     return answer;
 }
- 
-int main(){
-   /* string s, pattern;
-    cin>> s >> pattern;
-    int answer;
-    answer= getSuffix(s, pattern);
-    cout<< answer<<endl;
-    */
 
-    vector<char*> pattern;
-    pattern.push_back("a");
-    pattern.push_back("o");
-
-    ifstream infile("in.txt", ifstream::in);
+void createSufix (std::string fileToCreateSufix){
+    ifstream infile(fileToCreateSufix, ifstream::in);
     string line;
-    long long count=0;
+    std::string::size_type const p(fileToCreateSufix.find_last_of('.'));
+    std::string file_without_extension = fileToCreateSufix.substr(0, p);
+    ofstream out(file_without_extension+".idx");
     while (getline(infile, line))
     {   
-        //int answer;
-        getSuffix(line);  
-        //count+=answer;
+        getSuffix(line, out);  
     }
-   // cout<<"O padrão "<< "*"<< pattern<< "*"<<" aparece "<<count<<" vezes no texto."<<endl;
-    out.close();
-    
-    ifstream outfile("output.idx");
+}
+
+void findPattern (std::string sufixFile, std::vector<char*> pattern, bool showOnlyCountOfPatterns){
+    string line;
+    ifstream outfile(sufixFile);
+    int numberOfPatterns = 0;
+    int numberOfLinesWithPatterns = 0;
     while(getline(outfile, line)){  
+        bool hasThePattern = false;
         vector<int> suffixArray;
         vector<int> count;
         vector< pair< int, string > > fixed;
@@ -175,11 +165,27 @@ int main(){
         while(extract >> extracted){
             count.push_back(stoi(extracted));
         }
+        
         fixed = fix(suffixArray, count);
-        for(int i=0; i<pattern.size(); i++){
+
+        for(long unsigned int i=0; i<pattern.size(); i++){
             vector<int> answer;
             answer= searchPattern(pattern[i], fixed);
-            cout<<answer.size()<<endl;
+            if(answer.size() > 0){
+                hasThePattern = true;
+                numberOfPatterns += answer.size();
+            }
+        }
+        if(hasThePattern && !showOnlyCountOfPatterns){
+            auto it = std::max_element(fixed.begin(), fixed.end(),
+                               [](const auto& a, const auto& b) {
+                                   return a.second.size() < b.second.size();
+                               });
+            pair< int, string > line = *it;
+            cout << line.second << endl;
+            numberOfLinesWithPatterns++;
         }
     }
-}    
+    cout << "Number of occ of the patterns: " << numberOfPatterns << endl;
+    cout << "Number of lines with the patterns: " << numberOfLinesWithPatterns << endl;
+}

@@ -1,6 +1,8 @@
+/.vscode
 *.txt
 *.myz
+*.idx
 dna
 english
-/.vscode
 ipmt
+proteins

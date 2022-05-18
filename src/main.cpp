@@ -8,6 +8,7 @@
 #include <vector>
 #include "util.hpp"
 #include "lz78.h"
+#include "sufixArray.h"
 
 struct option long_options[] = { //opções por extenso para getopt_long
 	{ "pattern", required_argument, NULL, 'p' },
@@ -55,6 +56,7 @@ int main( int argc, char* argv[] ){
     //optind eh o indice que a lib getopt usa pra saber o indice em que esta checando os argumentos
     //quando o while ai de cima acaba, quer dizer que parou de ler os comandos -alguma_coisa
     //logo o que vier depois nao eh comando que tem - antes
+    optind++;
     if (algorithmMode == "search") {
         if(optind < argc){
             patterns.push_back(copyString(argv[optind]));
@@ -64,8 +66,6 @@ int main( int argc, char* argv[] ){
             exit(1);
             fflush(stdout);
         }
-    }else{
-        optind++;
     }
 
     if (optind < argc) {
@@ -96,9 +96,9 @@ int main( int argc, char* argv[] ){
         }
     }
     if(algorithmMode == "index"){
-        //chama o index
+        createSufix(fileName);
     } else if (algorithmMode == "search"){
-        //chama o search
+        findPattern(fileName, patterns, showOnlyCountOfPatterns);
     } else if(algorithmMode == "zip"){
         lz78Compress(fileName);
     } else if(algorithmMode == "unzip"){
