@@ -46,19 +46,20 @@ void getSuffix(string s){
     sort(answer.begin(), answer.end(), sortSec);
     for(int i=0; i<answer.size(); i++){
         out<< answer[i].first;
-        out<<" ";
+        if(i!=answer.size()-1) out<<" ";   
     }
     out<<"\n";
     for(int i=0; i<256; i++){
         out<<countLetter[i];
-        out<<" ";
+        if(i!=255)out<<" ";
     }
     out<<"\n";
+
 }
 
 
 
-void fix(vector<int> &first, vector<int> &countLetter){
+vector<pair <int, string> > fix(vector<int> &first, vector<int> &countLetter){
     int currentPos =0;
     vector<pair < int, string> > answer(first.size());
     string concat(first.size(), 'a');
@@ -72,10 +73,13 @@ void fix(vector<int> &first, vector<int> &countLetter){
         answer[i].first = first[i];
         answer[i].second = concat.substr(i);
     }
+    sort(answer.begin(), answer.end(), sortSec);
+
+    return answer;
 }
 
 
-vector<int> searchPattern(string pattern, vector< int, string> &suffixArray){
+vector<int> searchPattern(string pattern, vector< pair< int, string > > &suffixArray){
     int lo = 0;
     int hi = suffixArray.size()-1;
     int saveMin=-1;
@@ -140,8 +144,10 @@ int main(){
     cout<< answer<<endl;
     */
 
-    string pattern;
-    cin>> pattern;
+    vector<char*> pattern;
+    pattern.push_back("a");
+    pattern.push_back("o");
+
     ifstream infile("in.txt", ifstream::in);
     string line;
     long long count=0;
@@ -158,6 +164,7 @@ int main(){
     while(getline(outfile, line)){  
         vector<int> suffixArray;
         vector<int> count;
+        vector< pair< int, string > > fixed;
         stringstream extract(line);
         string extracted;
         while( extract >> extracted){
@@ -168,7 +175,11 @@ int main(){
         while(extract >> extracted){
             count.push_back(stoi(extracted));
         }
-        fix(suffixArray, count);
+        fixed = fix(suffixArray, count);
+        for(int i=0; i<pattern.size(); i++){
+            vector<int> answer;
+            answer= searchPattern(pattern[i], fixed);
+            cout<<answer.size()<<endl;
+        }
     }
-
 }    
