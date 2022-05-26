@@ -16,9 +16,6 @@ bool startsWith(string a, string b){
     for_each(b.begin(), b.end(), [](char & b){
         b = tolower(b);
     });
-    //transform(a.begin(), a.end(), a.begin(), tolower);
-    // Convert toMatch to lower case
-    //transform(b.begin(), b.end(), b.begin(), tolower);
     if(a.find(b) == 0)
         return true;
     else
@@ -106,17 +103,14 @@ vector<int> searchPattern(string pattern, vector< pair< int, string > > &suffixA
         int mid = (secLo+secHi)/2;
         if(mid==secLo) mid= secHi;
         if(startsWith(suffixArray[mid].second, pattern)){
-           // cout<<"mid nesse"<<mid<<endl;
             if(saveMax==-1) saveMax=mid;
             else if(mid>saveMax) saveMax=mid;
-            //cout<<"teste "<<saveMax<<endl;
             secLo = mid+1;
         }       
         else if(suffixArray[mid].second>pattern){
             secHi = mid-1;
             mid = (secHi+secLo)/2;
             if(mid==secLo) mid = secHi;
-           // cout<<"mid "<<mid<<endl;
         }
         else if(suffixArray[mid].second<pattern){
             secLo = mid+1; 
